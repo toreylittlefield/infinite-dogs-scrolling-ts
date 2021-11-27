@@ -1,0 +1,69 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background-image: url("../public/cool-background2.png");
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app {
+  display: grid;
+  min-height: 100vh;
+  place-content: center;
+  place-items: center;
+}
+
+@media screen and (min-width: 800px) {
+  #app {
+    grid-row-gap: 5em;
+    grid-column-gap: 10px;
+    grid-template-columns: 22% 22% auto;
+    /* grid-template-rows: 22% auto 22%; */
+    place-content: space-around;
+  }
+}
+
+.breed-container img {
+  object-fit: scale-down;
+  min-height: 150px;
+  max-height: 300px;
+}
+
+.dog-name {
+  background-color: #222222;
+  color: whitesmoke;
+  text-align: center;
+}
+
+.observer {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  color: white;
+  text-align: center;
+  background-color: red;
+  width: 100%;
+}
+
+.loading,
+.observer h2 {
+  margin: 0;
+  padding: 1em;
+}
+
+.loading {
+  background-color: papayawhip;
+  text-align: center;
+}
+.on {
+  background-color: green;
+}

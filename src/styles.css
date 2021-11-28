@@ -1,15 +1,20 @@
-* {
+/* set the layout to border box model */
+html {
   box-sizing: border-box;
 }
-
-html,
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+/* set font family and background gradient */
 body {
-  margin: 0;
   padding: 0;
+  border: 0;
+  font-family: Tahoma, Arial, sans-serif;
 }
 
 body {
-  font-family: sans-serif;
   background-image: url('../public/cool-background2.png');
   min-height: 100vh;
   overflow-x: hidden;
@@ -25,24 +30,46 @@ body {
 @media screen and (min-width: 800px) {
   #app {
     grid-row-gap: 2em;
-    grid-column-gap: 10px;
-    grid-template-columns: 22% auto auto;
+    grid-column-gap: 2.5em;
+    grid-template-columns: 26% auto auto;
     /* grid-template-rows: 22% auto 22%; */
     place-content: space-evenly;
   }
+
+  .breed-container {
+    width: inherit;
+  }
+}
+
+.breed-container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+  width: 100%;
 }
 
 .breed-container img {
   object-fit: scale-down;
+  object-position: 50% 100%;
   min-height: 150px;
   max-height: 480px;
   width: 100%;
 }
 
-.dog-name {
+.breed-caption {
   background-color: #222222;
+  display: grid;
+  grid-template-columns: 1fr auto;
   color: whitesmoke;
-  text-align: center;
+  text-align: left;
+  background-color: #001219;
+  padding: 1rem;
+}
+
+.breed-caption * {
+  margin: 0.5rem;
 }
 
 .observer {
@@ -65,6 +92,53 @@ body {
   background-color: papayawhip;
   text-align: center;
 }
+
 .on {
   background-color: green;
+}
+
+.btn {
+  font-family: inherit; /* For all browsers */
+  font-size: 100%; /* For all browsers */
+  line-height: 1.15; /* For all browsers */
+  margin: 0; /* Firefox and Safari have margin */
+  overflow: visible; /* Edge hides overflow */
+  text-transform: none; /* Firefox inherits text-transform */
+  -webkit-appearance: button;
+  border: 0;
+  border-radius: 0.25rem;
+  background: #ef4875;
+  color: white;
+  font-family: -system-ui, sans-serif;
+  place-self: flex-start;
+  max-height: 100px;
+  font-size: 1rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  margin: 0.25rem;
+  cursor: pointer;
+  border: 5px solid whitesmoke;
+  box-shadow: 5px 5px 0 whitesmoke, -5px -5px 0 whitesmoke, -5px 5px 0 whitesmoke, 5px -5px 0 whitesmoke;
+  transition: 500ms ease-in-out 100ms;
+  display: grid;
+  place-items: center;
+}
+
+.btn:hover {
+  box-shadow: 20px 5px 0 #6958db, -20px -5px 0 #6958db;
+  border: 5px solid transparent;
+  transform: scale(1.2);
+}
+
+svg.paw-icon {
+  fill: inherit;
+  display: block;
+  width: 45px;
+}
+
+.btn.primary svg.paw-icon:hover {
+  fill-opacity: 0.3;
+  fill: whitesmoke;
 }

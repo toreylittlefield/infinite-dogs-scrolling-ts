@@ -1,11 +1,10 @@
-import "./styles.css";
+import './styles.css';
 const API_BREEDS_URL = `https://dog.ceo/api/breeds/list/all`;
-const API_BY_BREED_URL = (breedname) =>
-  `https://dog.ceo/api/breed/${breedname}/images`;
-const template = document.querySelector("template");
-const appContainer = document.querySelector("#app");
-const sentinel = document.getElementById("sentinel");
-const observerAlertSection = document.querySelector(".observer");
+const API_BY_BREED_URL = (breedname) => `https://dog.ceo/api/breed/${breedname}/images`;
+const template = document.querySelector('template');
+const appContainer = document.querySelector('#app');
+const sentinel = document.getElementById('sentinel');
+const observerAlertSection = document.querySelector('.observer');
 let breedsList = [];
 
 const apiFetch = async (url) => {
@@ -21,18 +20,21 @@ const apiFetch = async (url) => {
 const fetchBreedImg = async (breed) => {
   const breedParam = API_BY_BREED_URL(breed);
   const { message = [] } = await apiFetch(breedParam);
-  const [firstImg = ""] = message;
+  const [firstImg = ''] = message;
   return firstImg;
 };
 
-async function createBreedElement(breed) {
+async function createBreedElement(breed: string) {
   const image = await fetchBreedImg(breed);
-  const clone = template.content.firstElementChild.cloneNode(true);
-  console.log(clone.childNodes);
-  const [img, figcaption] = clone.querySelectorAll("img, figcaption");
+  const clone = template.content.firstElementChild.cloneNode(true) as any;
+  const [img, h2, p] = <[HTMLImageElement, HTMLHeadingElement, HTMLParagraphElement]>(
+    clone.querySelectorAll('img, h2, p')
+  );
+  h2.textContent = breed.toUpperCase();
+  p.textContent = `What a lovely ${breed}!`;
   img.src = image;
   img.alt = breed;
-  figcaption.textContent = `The name of this breed is: ${breed}`;
+
   appContainer.appendChild(clone);
 }
 
@@ -59,14 +61,12 @@ const createFirstFiveSections = async (breedsList) => {
     if (entries.length > 0) {
       const [target] = entries;
       if (target.isIntersecting && breedsList.length > 0) {
-        observerAlertSection.classList.add("on");
-        observerAlertSection.firstElementChild.textContent = "Observing";
-        // const breed = breedsList.pop();
-        // createBreedElement(breed);
+        observerAlertSection.classList.add('on');
+        observerAlertSection.firstElementChild.textContent = 'Observing';
         createFirstFiveSections(breedsList);
       } else {
-        observerAlertSection.classList.remove("on");
-        observerAlertSection.firstElementChild.textContent = "Observer Off";
+        observerAlertSection.classList.remove('on');
+        observerAlertSection.firstElementChild.textContent = 'Observer Off';
       }
     }
   };

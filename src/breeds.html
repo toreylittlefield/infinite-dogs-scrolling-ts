@@ -2,12 +2,14 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width />
-    <title>Parcel Sandbox</title>
     <meta charset="UTF-8" />
+    <title>Breed Name</title>
   </head>
 
   <body>
+    <h1>Breeds!</h1>
     <div class="observer"><h2></h2></div>
+
     <div id="app">
       <template>
         <figure class="breed-container">
@@ -17,7 +19,7 @@
               <h2 class="breed-name"></h2>
               <p class="breed-description"></p>
             </div>
-            <button class="btn primary">
+            <button data-breed-name="null" class="btn primary">
               View More
               <svg
                 class="paw-icon"
@@ -50,7 +52,6 @@
       </template>
     </div>
     <div class="loading" id="sentinel"><h3>Sentinel</h3></div>
-
-    <script src="src/index.ts"></script>
+    <!-- <script src="index.ts"></script> -->
   </body>
 </html>

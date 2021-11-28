@@ -10,7 +10,7 @@ body {
 
 body {
   font-family: sans-serif;
-  background-image: url("../public/cool-background2.png");
+  background-image: url('../public/cool-background2.png');
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -24,18 +24,19 @@ body {
 
 @media screen and (min-width: 800px) {
   #app {
-    grid-row-gap: 5em;
+    grid-row-gap: 2em;
     grid-column-gap: 10px;
-    grid-template-columns: 22% 22% auto;
+    grid-template-columns: 22% auto auto;
     /* grid-template-rows: 22% auto 22%; */
-    place-content: space-around;
+    place-content: space-evenly;
   }
 }
 
 .breed-container img {
   object-fit: scale-down;
   min-height: 150px;
-  max-height: 300px;
+  max-height: 480px;
+  width: 100%;
 }
 
 .dog-name {

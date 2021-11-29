@@ -1,5 +1,11 @@
 import './styles.css';
 
+type Page = 'index' | 'breeds';
+
+type PagesByHTML = Exclude<`${Page}.html` | `pages/${Page}.html`, 'pages/index.html' | 'breeds.html'>;
+
+type Path = '/' | 'pages/';
+
 const app = {
   API_BREEDS_URL: `https://dog.ceo/api/breeds/list/all`,
   API_BY_BREED_URL: (breedname) => `https://dog.ceo/api/breed/${breedname}/images`,
@@ -70,6 +76,14 @@ const app = {
     return;
   },
 
+  goToPage: (page: PagesByHTML, queryParams?: string) => {
+    console.log(window.location.href + page);
+    const url = new URL(window.location.href + page);
+    console.log(url.href);
+    window.location.href = url.href;
+    // console.log(window.location.href, page);
+  },
+
   getBreedNameFromClick: (target: EventTarget) => {
     let breedNameData = '';
     if (target instanceof HTMLButtonElement) {
@@ -82,26 +96,25 @@ const app = {
   },
 
   // event delegate button clicks for each card;
-  addButtonListener: () =>
+  buttonEventGoToBreed: () =>
     app.appContainer.addEventListener('click', (event) => {
       const { target } = event;
       const breedName = app.getBreedNameFromClick(target);
-      console.log(breedName);
       if (breedName !== '') {
         localStorage.setItem('breed-name', breedName);
-        console.log(localStorage);
+        app.goToPage('pages/breeds.html', breedName);
       }
     }),
 
   getPage: () => {
     // from #app data-page in html
-    type Page = 'index' | 'breeds';
 
     const mainContainer = app.appContainer as HTMLElement;
     const data = mainContainer.dataset.page as Page;
     const page: Page = data;
     switch (page) {
       case 'index': {
+        console.log(page);
         app.loadIndexPage();
         return;
       }
@@ -117,6 +130,7 @@ const app = {
     app.breedsList = await app.loadBreedsList();
     app.breedsList.reverse();
     await app.createFirstFiveSections(app.breedsList);
+    app.buttonEventGoToBreed();
     const obsEntries = (entries) => {
       if (entries.length > 0) {
         const [target] = entries;

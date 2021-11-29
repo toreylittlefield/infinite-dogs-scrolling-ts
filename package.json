@@ -4,8 +4,8 @@
   "description": "",
   "source": "src/index.ts",
   "scripts": {
-    "start": "parcel serve src/index.html src/pages/*.html && watch",
-    "build": "parcel build src/index.html src/pages/*.html"
+    "start": "parcel serve src/**/*.html --open",
+    "build": "parcel build src/**/*.html"
   },
   "dependencies": {
     "typescript": "4.5.2"

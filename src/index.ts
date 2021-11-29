@@ -93,8 +93,27 @@ const app = {
       }
     }),
 
+  getPage: () => {
+    // from #app data-page in html
+    type Page = 'index' | 'breeds';
+
+    const mainContainer = app.appContainer as HTMLElement;
+    const data = mainContainer.dataset.page as Page;
+    const page: Page = data;
+    switch (page) {
+      case 'index': {
+        app.loadIndexPage();
+        return;
+      }
+      case 'breeds': {
+        console.log(page);
+        return;
+      }
+    }
+  },
+
   // init, load breeds and add obeserver for infinite scrolling with doggos!
-  onPageLoad: async () => {
+  loadIndexPage: async () => {
     app.breedsList = await app.loadBreedsList();
     app.breedsList.reverse();
     await app.createFirstFiveSections(app.breedsList);
@@ -116,6 +135,6 @@ const app = {
     observer.observe(app.sentinelElement);
   },
 };
-window.addEventListener('DOMContentLoaded', app.onPageLoad, { once: true });
+window.addEventListener('DOMContentLoaded', app.getPage, { once: true });
 
 // console.log(localStorage.getItem('breed-name'));

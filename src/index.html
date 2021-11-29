@@ -9,7 +9,7 @@
 
   <body>
     <div class="observer"><h2></h2></div>
-    <div id="app">
+    <div id="app" data-page="index">
       <template>
         <figure class="breed-container">
           <img />
@@ -19,7 +19,7 @@
               <p class="breed-description"></p>
             </div>
             <button data-breed-name="null" class="btn primary">
-              <a href="breeds.html"> View More </a>
+              <a href="pages/breeds.html"> View More </a>
               <svg
                 class="paw-icon"
                 version="1.1"
@@ -52,6 +52,6 @@
     </div>
     <div class="loading" id="sentinel"><h3>Sentinel</h3></div>
 
-    <script src="index.ts"></script>
+    <script type="module" src="index.ts"></script>
   </body>
 </html>

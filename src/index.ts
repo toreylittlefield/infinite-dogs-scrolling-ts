@@ -6,6 +6,11 @@ type PagesByHTML = Exclude<`${Page}.html` | `pages/${Page}.html`, 'pages/index.h
 
 type Path = '/' | 'pages/';
 
+type BreedType = {
+  breed: string;
+  imgSrc: string;
+};
+
 const app = {
   API_BREEDS_URL: `https://dog.ceo/api/breeds/list/all`,
   API_BY_BREED_URL: (breedname) => `https://dog.ceo/api/breed/${breedname}/images`,
@@ -46,8 +51,10 @@ const app = {
     return message;
   },
 
-  createBreedElement: async (breed: string) => {
-    const image = await app.fetchBreedImg(breed);
+  createBreedElement: async (breed: string, imgSrc?: string) => {
+    if (!imgSrc) {
+      imgSrc = await app.fetchBreedImg(breed);
+    }
     const clone = app.template.content.firstElementChild.cloneNode(true) as any;
     const [img, h2, p, button] = <[HTMLImageElement, HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement]>(
       clone.querySelectorAll('img, h2, p, button')
@@ -55,7 +62,7 @@ const app = {
     button.dataset.breedName = breed;
     h2.textContent = breed.toUpperCase();
     p.textContent = `What a lovely ${breed}!`;
-    img.src = image;
+    img.src = imgSrc;
     img.alt = breed;
 
     app.appContainer.appendChild(clone);
@@ -71,17 +78,19 @@ const app = {
     while (i < 5 && breedsList.length > 0) {
       i++;
       const breed = breedsList.pop();
-      await app.createBreedElement(breed);
+      if (typeof breed === 'object' && 'breed' in breed && 'imgSrc' in breed) {
+        await app.createBreedElement(breed.breed, breed.imgSrc);
+      }
+      if (typeof breed === 'string') {
+        await app.createBreedElement(breed);
+      }
     }
     return;
   },
 
   goToPage: (page: PagesByHTML, queryParams?: string) => {
-    console.log(window.location.href + page);
     const url = new URL(window.location.href + page);
-    console.log(url.href);
-    window.location.href = url.href;
-    // console.log(window.location.href, page);
+    window.location.href = `${url.href}?breed=${queryParams}`;
   },
 
   getBreedNameFromClick: (target: EventTarget) => {
@@ -114,16 +123,30 @@ const app = {
     const page: Page = data;
     switch (page) {
       case 'index': {
-        console.log(page);
         app.loadIndexPage();
         return;
       }
       case 'breeds': {
-        console.log(page);
+        app.loadBreedsPage();
         return;
       }
     }
   },
+  obsEntries: (entries) => {
+    if (entries.length > 0) {
+      const [target] = entries;
+      if (target.isIntersecting && app.breedsList.length > 0) {
+        app.observerAlertSection.classList.add('on');
+        app.observerAlertSection.firstElementChild.textContent = 'Observing';
+        app.createFirstFiveSections(app.breedsList);
+      } else {
+        app.observerAlertSection.classList.remove('on');
+        app.observerAlertSection.firstElementChild.textContent = 'Observer Off';
+      }
+    }
+  },
+
+  createObserver: () => new IntersectionObserver(app.obsEntries),
 
   // init, load breeds and add obeserver for infinite scrolling with doggos!
   loadIndexPage: async () => {
@@ -131,21 +154,29 @@ const app = {
     app.breedsList.reverse();
     await app.createFirstFiveSections(app.breedsList);
     app.buttonEventGoToBreed();
-    const obsEntries = (entries) => {
-      if (entries.length > 0) {
-        const [target] = entries;
-        if (target.isIntersecting && app.breedsList.length > 0) {
-          app.observerAlertSection.classList.add('on');
-          app.observerAlertSection.firstElementChild.textContent = 'Observing';
-          app.createFirstFiveSections(app.breedsList);
-        } else {
-          app.observerAlertSection.classList.remove('on');
-          app.observerAlertSection.firstElementChild.textContent = 'Observer Off';
-        }
-      }
-    };
+    const observer = app.createObserver();
+    observer.observe(app.sentinelElement);
+  },
 
-    let observer = new IntersectionObserver(obsEntries);
+  getSearchParams: (paramToReturn?: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (paramToReturn) {
+      return params.get(paramToReturn);
+    }
+    return params;
+  },
+
+  loadBreedsPage: async () => {
+    const breedname = app.getSearchParams('breed');
+    if (typeof breedname !== 'string') return;
+    app.breedsList = await app.fetchAllBreedImages(breedname);
+    app.breedsList = app.breedsList.map((item: string) => {
+      return { breed: breedname, imgSrc: item };
+    });
+
+    await app.createFirstFiveSections(app.breedsList as BreedType[]);
+    // app.buttonEventGoToBreed();
+    const observer = app.createObserver();
     observer.observe(app.sentinelElement);
   },
 };
